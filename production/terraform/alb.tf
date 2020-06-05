@@ -42,11 +42,11 @@ resource "aws_lb" "production" {
   enable_deletion_protection = true
 
   #Access Logs Management 
-  access_logs {
-    bucket  = "${aws_s3_bucket.production_logs.bucket}"
-    prefix  = "production-pub-alb"
-    enabled = true
-  }
+  //access_logs {
+  //  bucket  = "${aws_s3_bucket.production_logs.bucket}"
+  //  prefix  = "production-pub-alb"
+  //  enabled = true
+  //}
 
   tags {
     name         = "Production Public ALB"
@@ -59,4 +59,26 @@ resource "aws_alb_target_group" "alb_pub_production_http" {
   port     = 80
   protocol = "HTTP"
   vpc_id   = "${aws_vpc.main.id}"
+
+  health_check {
+    path                = "/"
+    port                = "80"
+    protocol            = "HTTP"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    interval            = 5
+    timeout             = 4
+    matcher             = "200"
+  }
+}
+
+resource "aws_alb_listener" "alb_front_http" {
+  load_balancer_arn = "${aws_lb.production.arn}"
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = "${aws_alb_target_group.alb_pub_production_http.arn}"
+    type             = "forward"
+  }
 }

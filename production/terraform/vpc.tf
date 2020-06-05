@@ -12,9 +12,9 @@ resource "aws_internet_gateway" "IG" {
 }
 
 resource "aws_subnet" "main-pub-a" {
-    availability_zone      = "eu-west-3a"
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "10.0.0.0/24"
+  availability_zone = "eu-west-3a"
+  vpc_id            = "${aws_vpc.main.id}"
+  cidr_block        = "10.0.0.0/24"
 
   map_public_ip_on_launch = "true"
 
@@ -24,9 +24,9 @@ resource "aws_subnet" "main-pub-a" {
 }
 
 resource "aws_subnet" "main-pub-b" {
-    availability_zone      = "eu-west-3b"
-  vpc_id     = "${aws_vpc.main.id}"
-  cidr_block = "10.0.1.0/24"
+  availability_zone = "eu-west-3b"
+  vpc_id            = "${aws_vpc.main.id}"
+  cidr_block        = "10.0.1.0/24"
 
   map_public_ip_on_launch = "true"
 
@@ -54,7 +54,6 @@ resource "aws_route_table_association" "route_table_association-subnet-A" {
   subnet_id      = "${aws_subnet.main-pub-a.id}"
   route_table_id = "${aws_route_table.productionpub.id}"
 }
-
 
 resource "aws_route_table_association" "route_table_association-subnet-B" {
   subnet_id      = "${aws_subnet.main-pub-b.id}"
